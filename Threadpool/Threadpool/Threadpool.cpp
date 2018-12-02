@@ -47,17 +47,15 @@ namespace Threadpool
 
 	VOID Threadpool::AddTask(TaskArgumentPair * lpTaskArgument)
 	{
-		if (lpTaskArgument != NULL)
-		{
-			EnterCriticalSection(&m_csQueueCriticalSection);
-			m_qTaskQueue->push(lpTaskArgument);
-			WakeConditionVariable(&m_cvQueueConditionVariable);
-			LeaveCriticalSection(&m_csQueueCriticalSection);
-		}
-		else
+		if (lpTaskArgument == NULL)
 		{
 			throw new std::out_of_range("lpTask");
 		}
+
+		EnterCriticalSection(&m_csQueueCriticalSection);
+		m_qTaskQueue->push(lpTaskArgument);
+		WakeConditionVariable(&m_cvQueueConditionVariable);
+		LeaveCriticalSection(&m_csQueueCriticalSection);
 	}
 
 	VOID Threadpool::Wait()
