@@ -117,6 +117,11 @@
   <ItemGroup>
     <ClCompile Include="FileLinesSorter.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Threadpool\Threadpool.vcxproj">
+      <Project>{bd6eb487-a654-45e0-abd6-2fc615fc57ca}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

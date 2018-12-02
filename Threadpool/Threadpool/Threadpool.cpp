@@ -15,6 +15,11 @@ namespace Threadpool
 			throw new std::out_of_range("dwThreadCount");
 		}
 
+		m_qTaskQueue = new std::queue<TaskArgumentPair *>();
+
+		InitializeCriticalSection(&m_csQueueCriticalSection);
+		InitializeConditionVariable(&m_cvQueueConditionVariable);
+
 		m_lpThreads = new HANDLE[dwThreadCount];
 		for (DWORD dwThread = 0; dwThread < dwThreadCount; ++dwThread)
 		{
@@ -23,10 +28,6 @@ namespace Threadpool
 				m_lpThreads[dwThread] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)TaskListenerThreadRoutine, this, 0, NULL);
 			} while (m_lpThreads[dwThread] == NULL);
 		}
-		m_qTaskQueue = new std::queue<TaskArgumentPair *>();
-
-		InitializeCriticalSection(&m_csQueueCriticalSection);
-		InitializeConditionVariable(&m_cvQueueConditionVariable);
 	}
 
 	Threadpool::~Threadpool()
