@@ -18,9 +18,15 @@
     <ClInclude Include="Threadpool.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="TaskArgumentPair.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Threadpool.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TaskArgumentPair.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

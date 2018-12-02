@@ -115,9 +115,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="TaskArgumentPair.h" />
     <ClInclude Include="Threadpool.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="TaskArgumentPair.cpp" />
     <ClCompile Include="Threadpool.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
