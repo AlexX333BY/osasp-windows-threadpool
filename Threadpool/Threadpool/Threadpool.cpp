@@ -24,7 +24,14 @@ namespace Threadpool
 
 	VOID Threadpool::AddTask(LPTHREAD_START_ROUTINE lpTask)
 	{
-		m_cqTaskQueue->push(lpTask);
+		if (lpTask != NULL)
+		{
+			m_cqTaskQueue->push(lpTask);
+		}
+		else
+		{
+			throw new std::out_of_range("lpTask");
+		}
 	}
 
 	DWORD Threadpool::GetNumberOfProcessors()

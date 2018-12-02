@@ -19,7 +19,6 @@ namespace Threadpool
 		DWORD m_dwThreadCount;
 		HANDLE *m_hThreads;
 		concurrency::concurrent_queue<LPTHREAD_START_ROUTINE> *m_cqTaskQueue;
-		volatile BOOL m_bShouldRun;
 
 		VOID ListenQueue();
 
