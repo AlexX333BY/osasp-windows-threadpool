@@ -20,8 +20,8 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{1DA6DF9E-CDE0-4331-9634-26CFC3F6933B}</ProjectGuid>
-    <RootNamespace>FileLinesSorter</RootNamespace>
+    <ProjectGuid>{70FC16C3-AFF0-45C3-8E31-87FD1C3C0A4A}</ProjectGuid>
+    <RootNamespace>FileLinesSorterRunner</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -39,7 +39,7 @@
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
@@ -115,15 +115,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="FileLinesSorter.cpp" />
+    <ClCompile Include="Runner.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Threadpool\Threadpool.vcxproj">
-      <Project>{bd6eb487-a654-45e0-abd6-2fc615fc57ca}</Project>
+    <ProjectReference Include="..\FileLinesSorter\FileLinesSorter.vcxproj">
+      <Project>{1da6df9e-cde0-4331-9634-26cfc3f6933b}</Project>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="FileLinesSorter.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
