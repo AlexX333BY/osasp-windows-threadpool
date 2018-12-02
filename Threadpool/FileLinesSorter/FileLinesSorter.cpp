@@ -1,6 +1,52 @@
 #include <stdio.h>
 #include <Windows.h>
 
+LPSTR *GetFileLines(LPSTR lpsFilename, LPDWORD lpdwLinesCount)
+{
+	HANDLE hFile = CreateFile(lpsFilename, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	if (hFile == INVALID_HANDLE_VALUE)
+	{
+		return NULL;
+	}
+
+	LARGE_INTEGER liFileSize;
+	if (!GetFileSizeEx(hFile, &liFileSize))
+	{
+		CloseHandle(hFile);
+		return NULL;
+	}
+
+	DWORD dwReadCount;
+	LPSTR lpsFile = (LPSTR)calloc(liFileSize.QuadPart + 1, 1);
+	BOOL bReadResult = ReadFile(hFile, lpsFile, (DWORD)liFileSize.QuadPart, &dwReadCount, NULL);
+	CloseHandle(hFile);
+	if (!bReadResult)
+	{
+		free(lpsFile);
+		return NULL;
+	}
+
+	LPCSTR lpsDelimiters = "\r\n";
+	LPSTR *lpsResult = (LPSTR *)calloc(0, sizeof(LPSTR)), *lpsBuffer;
+	LPSTR lpsContext;
+	DWORD dwLinesCount = 0;
+	LPSTR lpsToken = strtok_s(lpsFile, lpsDelimiters, &lpsContext);
+
+	while (lpsToken != NULL)
+	{
+		do
+		{
+			lpsBuffer = (LPSTR *)realloc(lpsResult, (dwLinesCount + 1) * sizeof(LPSTR));
+		} while (lpsBuffer == NULL);
+		lpsResult = lpsBuffer;
+		lpsResult[dwLinesCount++] = lpsToken;
+		lpsToken = strtok_s(NULL, lpsDelimiters, &lpsContext);
+	}
+
+	*lpdwLinesCount = dwLinesCount;
+	return lpsResult;
+}
+
 int main(int argc, char **argv)
 {
 	if (argc == 0)
@@ -20,33 +66,6 @@ int main(int argc, char **argv)
 		}
 	}
 
-	HANDLE hFile = CreateFile(argv[1], GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-	if (hFile == INVALID_HANDLE_VALUE)
-	{
-		printf("Error opening file %s\n", argv[1]);
-		return -1;
-	}
-
-	HANDLE hFileMapping = CreateFileMapping(hFile, NULL, PAGE_READONLY, 0, 0, NULL);
-	if (hFileMapping == NULL)
-	{
-		CloseHandle(hFile);
-		printf("Error mapping file\n");
-		return -1;
-	}
-
-	LPVOID lpFileView = MapViewOfFileEx(hFileMapping, FILE_MAP_READ, 0, 0, 0, NULL);
-	if (lpFileView == NULL)
-	{
-		CloseHandle(hFileMapping);
-		CloseHandle(hFile);
-		printf("Error viewing file\n");
-		return -1;
-	}
-
-	//
-
-	UnmapViewOfFile(lpFileView);
-	CloseHandle(hFileMapping);
-	CloseHandle(hFile);
+	DWORD dwLinesCount;
+	LPSTR *lpsLines = GetFileLines(argv[1], &dwLinesCount);
 }
