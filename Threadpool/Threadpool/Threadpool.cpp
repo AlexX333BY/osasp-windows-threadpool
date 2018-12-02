@@ -65,9 +65,8 @@ namespace Threadpool
 
 	VOID Threadpool::Wait(DWORD dwTimeout)
 	{
-		if (m_bIsRunning)
+		if (InterlockedCompareExchange(&m_bIsRunning, FALSE, TRUE))
 		{
-			m_bIsRunning = FALSE;
 			EnterCriticalSection(&m_csQueueCriticalSection);
 			for (DWORD dwThread = 0; dwThread < m_dwThreadCount; ++dwThread)
 			{

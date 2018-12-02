@@ -20,7 +20,7 @@ namespace Threadpool
 		DWORD m_dwThreadCount;
 		HANDLE *m_lpThreads;
 
-		volatile BOOL m_bIsRunning;
+		volatile LONG m_bIsRunning;
 
 		CRITICAL_SECTION m_csQueueCriticalSection;
 		CONDITION_VARIABLE m_cvQueueConditionVariable;
