@@ -78,6 +78,11 @@ namespace Threadpool
 		}
 	}
 
+	DWORD Threadpool::GetThreadCount()
+	{
+		return m_dwThreadCount;
+	}
+
 	DWORD WINAPI Threadpool::TaskListenerThreadRoutine(Threadpool *lpInstance)
 	{
 		TaskArgumentPair *lpTaskArgument;

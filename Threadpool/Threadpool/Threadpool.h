@@ -16,8 +16,9 @@ namespace Threadpool
 		VOID AddTask(TaskArgumentPair *lpTaskArgument);
 		VOID Wait();
 		VOID Wait(DWORD dwTimeout);
+		DWORD GetThreadCount();
 	protected:
-		DWORD m_dwThreadCount;
+		CONST DWORD m_dwThreadCount;
 		HANDLE *m_lpThreads;
 
 		volatile LONG m_bIsRunning;
