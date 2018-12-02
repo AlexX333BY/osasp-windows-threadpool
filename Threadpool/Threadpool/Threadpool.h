@@ -27,6 +27,5 @@ namespace Threadpool
 		std::queue<TaskArgumentPair *> *m_qTaskQueue;
 
 		static VOID TaskListenerThreadRoutine(Threadpool *lpInstance);
-		static DWORD GetNumberOfProcessors();
 	};
 }

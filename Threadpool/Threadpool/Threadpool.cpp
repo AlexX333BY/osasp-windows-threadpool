@@ -1,9 +1,10 @@
 #include "Threadpool.h"
+#include "SystemInfoProvider.h"
 #include <stdexcept> 
 
 namespace Threadpool
 {
-	Threadpool::Threadpool() : Threadpool::Threadpool(GetNumberOfProcessors())
+	Threadpool::Threadpool() : Threadpool::Threadpool(SystemInfoProvider::GetNumberOfProcessors())
 	{ }
 
 	Threadpool::Threadpool(DWORD dwThreadCount) 
@@ -100,12 +101,5 @@ namespace Threadpool
 				lpTaskArgument->GetTask()(lpTaskArgument->GetArgument());
 			}
 		} while (lpTaskArgument != NULL);
-	}
-
-	DWORD Threadpool::GetNumberOfProcessors()
-	{
-		SYSTEM_INFO siInfo;
-		GetSystemInfo(&siInfo);
-		return siInfo.dwNumberOfProcessors;
 	}
 }

@@ -115,10 +115,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="SystemInfoProvider.h" />
     <ClInclude Include="TaskArgumentPair.h" />
     <ClInclude Include="Threadpool.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="SystemInfoProvider.cpp" />
     <ClCompile Include="TaskArgumentPair.cpp" />
     <ClCompile Include="Threadpool.cpp" />
   </ItemGroup>
