@@ -1,5 +1,6 @@
 #pragma once
 
+#include "TaskArgumentPair.h"
 #include <Windows.h>
 #include <queue>
 
@@ -12,7 +13,7 @@ namespace Threadpool
 		Threadpool(DWORD dwThreadCount);
 		~Threadpool();
 
-		VOID AddTask(LPTHREAD_START_ROUTINE lpTask);
+		VOID AddTask(TaskArgumentPair *lpTaskArgument);
 		VOID Wait();
 		VOID Wait(DWORD dwTimeout);
 	protected:
@@ -23,7 +24,7 @@ namespace Threadpool
 
 		CRITICAL_SECTION m_csQueueCriticalSection;
 		CONDITION_VARIABLE m_cvQueueConditionVariable;
-		std::queue<LPTHREAD_START_ROUTINE> *m_qTaskQueue;
+		std::queue<TaskArgumentPair *> *m_qTaskQueue;
 
 		static VOID TaskListenerThreadRoutine(Threadpool *lpInstance);
 

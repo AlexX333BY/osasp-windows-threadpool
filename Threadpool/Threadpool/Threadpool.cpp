@@ -22,7 +22,7 @@ namespace Threadpool
 				m_lpThreads[dwThread] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)TaskListenerThreadRoutine, this, 0, NULL);
 			} while (m_lpThreads[dwThread] == NULL);
 		}
-		m_qTaskQueue = new std::queue<LPTHREAD_START_ROUTINE>();
+		m_qTaskQueue = new std::queue<TaskArgumentPair *>();
 
 		InitializeCriticalSection(&m_csQueueCriticalSection);
 		InitializeConditionVariable(&m_cvQueueConditionVariable);
@@ -33,12 +33,12 @@ namespace Threadpool
 		
 	}
 
-	VOID Threadpool::AddTask(LPTHREAD_START_ROUTINE lpTask)
+	VOID Threadpool::AddTask(TaskArgumentPair * lpTaskArgument)
 	{
-		if (lpTask != NULL)
+		if (lpTaskArgument != NULL)
 		{
 			EnterCriticalSection(&m_csQueueCriticalSection);
-			m_qTaskQueue->push(lpTask);
+			m_qTaskQueue->push(lpTaskArgument);
 			WakeConditionVariable(&m_cvQueueConditionVariable);
 			LeaveCriticalSection(&m_csQueueCriticalSection);
 		}
@@ -67,7 +67,7 @@ namespace Threadpool
 
 	VOID Threadpool::TaskListenerThreadRoutine(Threadpool *lpInstance)
 	{
-		LPTHREAD_START_ROUTINE lpTask;
+		TaskArgumentPair *lpTaskArgument;
 
 		do
 		{
@@ -76,15 +76,15 @@ namespace Threadpool
 			{
 				SleepConditionVariableCS(&lpInstance->m_cvQueueConditionVariable, &lpInstance->m_csQueueCriticalSection, INFINITE);
 			}
-			lpTask = lpInstance->m_qTaskQueue->front();
+			lpTaskArgument = lpInstance->m_qTaskQueue->front();
 			lpInstance->m_qTaskQueue->pop();
 			LeaveCriticalSection(&lpInstance->m_csQueueCriticalSection);
 
-			if (lpTask != NULL)
+			if (lpTaskArgument != NULL)
 			{
-				lpTask(NULL);
+				lpTaskArgument->GetTask()(lpTaskArgument->GetArgument());
 			}
-		} while (lpTask != NULL);
+		} while (lpTaskArgument != NULL);
 	}
 
 	DWORD Threadpool::GetNumberOfProcessors()
