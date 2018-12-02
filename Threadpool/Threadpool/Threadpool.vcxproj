@@ -117,6 +117,9 @@
   <ItemGroup>
     <ClInclude Include="Threadpool.h" />
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Threadpool.cpp" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
