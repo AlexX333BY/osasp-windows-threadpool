@@ -45,7 +45,7 @@ namespace Threadpool
 		DeleteCriticalSection(&m_csQueueCriticalSection);
 	}
 
-	VOID Threadpool::AddTask(TaskArgumentPair * lpTaskArgument)
+	VOID Threadpool::AddTask(TaskArgumentPair *lpTaskArgument)
 	{
 		if (lpTaskArgument == NULL)
 		{
@@ -79,7 +79,7 @@ namespace Threadpool
 		}
 	}
 
-	VOID Threadpool::TaskListenerThreadRoutine(Threadpool *lpInstance)
+	DWORD WINAPI Threadpool::TaskListenerThreadRoutine(Threadpool *lpInstance)
 	{
 		TaskArgumentPair *lpTaskArgument;
 
@@ -99,5 +99,7 @@ namespace Threadpool
 				lpTaskArgument->GetTask()(lpTaskArgument->GetArgument());
 			}
 		} while (lpTaskArgument != NULL);
+
+		return 0;
 	}
 }

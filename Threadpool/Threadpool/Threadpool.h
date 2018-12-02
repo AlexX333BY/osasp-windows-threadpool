@@ -26,6 +26,6 @@ namespace Threadpool
 		CONDITION_VARIABLE m_cvQueueConditionVariable;
 		std::queue<TaskArgumentPair *> *m_qTaskQueue;
 
-		static VOID TaskListenerThreadRoutine(Threadpool *lpInstance);
+		static DWORD WINAPI TaskListenerThreadRoutine(Threadpool *lpInstance);
 	};
 }
