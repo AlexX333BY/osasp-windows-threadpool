@@ -30,7 +30,18 @@ namespace Threadpool
 
 	Threadpool::~Threadpool()
 	{
-		
+		if (m_bIsRunning)
+		{
+			Wait();
+		}
+
+		for (DWORD dwThread = 0; dwThread < m_dwThreadCount; ++dwThread)
+		{
+			CloseHandle(m_lpThreads[dwThread]);
+		}
+		delete[] m_lpThreads;
+		delete m_qTaskQueue;
+		DeleteCriticalSection(&m_csQueueCriticalSection);
 	}
 
 	VOID Threadpool::AddTask(TaskArgumentPair * lpTaskArgument)
@@ -55,14 +66,18 @@ namespace Threadpool
 
 	VOID Threadpool::Wait(DWORD dwTimeout)
 	{
-		EnterCriticalSection(&m_csQueueCriticalSection);
-		for (DWORD dwThread = 0; dwThread < m_dwThreadCount; ++dwThread)
+		if (m_bIsRunning)
 		{
-			m_qTaskQueue->push(NULL);
+			m_bIsRunning = FALSE;
+			EnterCriticalSection(&m_csQueueCriticalSection);
+			for (DWORD dwThread = 0; dwThread < m_dwThreadCount; ++dwThread)
+			{
+				m_qTaskQueue->push(NULL);
+			}
+			WakeAllConditionVariable(&m_cvQueueConditionVariable);
+			LeaveCriticalSection(&m_csQueueCriticalSection);
+			WaitForMultipleObjects(m_dwThreadCount, m_lpThreads, TRUE, dwTimeout);
 		}
-		WakeAllConditionVariable(&m_cvQueueConditionVariable);
-		LeaveCriticalSection(&m_csQueueCriticalSection);
-		WaitForMultipleObjects(m_dwThreadCount, m_lpThreads, TRUE, dwTimeout);
 	}
 
 	VOID Threadpool::TaskListenerThreadRoutine(Threadpool *lpInstance)
