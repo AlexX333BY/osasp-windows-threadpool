@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Windows.h>
-#include <concurrent_queue.h>
+#include <queue>
 
 namespace Threadpool
 {
@@ -17,10 +17,15 @@ namespace Threadpool
 		VOID Wait(DWORD dwTimeout);
 	protected:
 		DWORD m_dwThreadCount;
-		HANDLE *m_hThreads;
-		concurrency::concurrent_queue<LPTHREAD_START_ROUTINE> *m_cqTaskQueue;
+		HANDLE *m_lpThreads;
 
-		VOID ListenQueue();
+		volatile BOOL m_bIsRunning;
+
+		CRITICAL_SECTION m_csQueueCriticalSection;
+		CONDITION_VARIABLE m_cvQueueConditionVariable;
+		std::queue<LPTHREAD_START_ROUTINE> *m_qTaskQueue;
+
+		static VOID TaskListenerThreadRoutine(Threadpool *lpInstance);
 
 		static DWORD GetNumberOfProcessors();
 	};
