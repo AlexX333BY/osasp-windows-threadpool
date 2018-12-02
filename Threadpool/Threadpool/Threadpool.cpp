@@ -48,6 +48,23 @@ namespace Threadpool
 		}
 	}
 
+	VOID Threadpool::Wait()
+	{
+		Wait(INFINITE);
+	}
+
+	VOID Threadpool::Wait(DWORD dwTimeout)
+	{
+		EnterCriticalSection(&m_csQueueCriticalSection);
+		for (DWORD dwThread = 0; dwThread < m_dwThreadCount; ++dwThread)
+		{
+			m_qTaskQueue->push(NULL);
+		}
+		WakeAllConditionVariable(&m_cvQueueConditionVariable);
+		LeaveCriticalSection(&m_csQueueCriticalSection);
+		WaitForMultipleObjects(m_dwThreadCount, m_lpThreads, TRUE, dwTimeout);
+	}
+
 	VOID Threadpool::TaskListenerThreadRoutine(Threadpool *lpInstance)
 	{
 		LPTHREAD_START_ROUTINE lpTask;
